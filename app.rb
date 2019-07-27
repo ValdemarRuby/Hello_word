@@ -22,7 +22,16 @@ post '/visit' do
 	@date_time = params[:date_time]
 	@barber = params[:barber]
 
+	hash = { :username => 'Enter your name',
+					 :phone => 'Enter your phone',
+					 :date_time => 'Enter time'
+	}
 
-
+	hash.each do |key, value|
+		if params[key] == ''
+			@error = hash[key]
+			return erb :visit
+		end
+	end
 	erb "OK, username is #{@username}, #{@phone}, #{@date_time}, #{@barber}"
 end
