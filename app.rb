@@ -2,6 +2,7 @@
 require 'rubygems'
 require 'sinatra'
 require 'sinatra/reloader'
+require 'pony'
 
 get '/' do
 	erb "Hello! <a href=\"https://github.com/bootstrap-ruby/sinatra-bootstrap\">Original</a> pattern has been modified for <a href=\"http://rubyschool.us/\">Ruby School!!!</a>"
@@ -27,11 +28,65 @@ post '/visit' do
 					 :date_time => 'Enter time'
 	}
 
-	hash.each do |key, value|
-		if params[key] == ''
-			@error = hash[key]
+	@error = hash.select {|key, value| params[key] == ''}.values.join(', ')
+
+	if @error != ''
 			return erb :visit
-		end
 	end
+
 	erb "OK, username is #{@username}, #{@phone}, #{@date_time}, #{@barber}"
 end
+
+get '/contacts' do
+	erb :contacts
+
+end
+
+post '/contacts' do
+  unless params[:name] == '' || params[:email] == '' || params[:content] == ''
+    Pony.options = {
+      :subject => "Portfolio page: Message delivery from #{params[:name]}",
+      :body => "#{params[:content]}",
+      :via => :smtp,
+      :via_options => {
+        :address              => 'smtp.1and1.com',
+        :port                 =>  '587',
+        :enable_starttls_auto => true,
+        :user_name            => ENV["wings6928"],
+        :password             => ENV["Sommelier0955009"],
+        :authentication       => :login,
+        :domain               => 'nterrafranca.com'
+        }
+      }
+    Pony.mail(:to => ENV["wings6928@gmail.com"])
+    save_message(params[:name], params[:email], params[:content])
+  end
+  redirect '/'
+end
+
+# post '/contacts' do
+#
+# 	unless params[:name] == '' || params[:message] == ''
+# 		Pony.mail(
+#    		:name => params[:name],
+#   		:mail => params[:mail],
+#   		:body => params[:body],
+#   		:to => 'wings6928@gmail.com',
+#   		:subject => params[:name] + " has contacted you",
+#   		:body => params[:message],
+#   		:port => '587',
+#   		:via => :smtp,
+#   		:via_options => {
+#     		:address              => 'smtp.gmail.com',
+#     		:port                 => '587',
+#     		:enable_starttls_auto => true,
+#     		:user_name            => 'wings6928',
+#     		:password             => 'Sommelier0955009',
+#     		:authentication       => :plain,
+#     		:domain               => 'localhost.localdomain'
+#   		})
+# 			Pony.mail(:to => ENV["wings6928@gmail.com"])
+# 	 save_message(params[:name], params[:email], params[:content])
+# 	end
+# 	redirect '/success'
+# end
