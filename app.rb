@@ -5,17 +5,23 @@ require 'sinatra/reloader'
 require 'pony'
 require 'sqlite3'
 
+
+def get_db
+ 	return SQLite3::Database.new 'mydatabase.db'
+end
+
 configure do
-	db = SQLite3::Database.new 'mydatabase.db'
+	db = get_db
 	db.execute 'CREATE TABLE IF NOT EXISTS
-		"Users" (
+		"Users"
+		(
 			"id" INTEGER PRIMARY KEY AUTOINCREMENT,
 			"username" TEXT,
 			"phone" TEXT,
 			"datastamp" TEXT,
 			"barber" TEXT,
 			"color" TEXT
-			);'
+			)'
 end
 
 get '/' do
@@ -34,7 +40,7 @@ end
 post '/visit' do
 	@username = params[:username]
 	@phone = params[:phone]
-	@date_time = params[:date_time]
+	@datastamp = params[:date_time]
 	@barber = params[:barber]
 
 	hash = { :username => 'Enter your name',
@@ -47,8 +53,19 @@ post '/visit' do
 	if @error != ''
 			return erb :visit
 	end
+  db = get_db
+	db.execute 'insert into
+		Users
+		(
+			username,
+			phone,
+			datastamp,
+			barber,
+			color
+		)
+		values (?, ?, ?, ?, ?)', [@username, @phone, @datastamp, @barber, @color]
 
-	erb "OK, username is #{@username}, #{@phone}, #{@date_time}, #{@barber}"
+	erb "OK, username is #{@username}, #{@phone}, #{@datastamp}, #{@barber}"
 end
 
 get '/contacts' do
@@ -76,6 +93,10 @@ post '/contacts' do
     save_message(params[:name], params[:email], params[:content])
   end
   redirect '/'
+end
+
+get '/showusers' do
+
 end
 
 # post '/contacts' do

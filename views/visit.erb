@@ -1,5 +1,17 @@
 <h2>Записаться</h2>
 <p>На этой странице вы можете записаться к нам на прием!</p>
+
+<script type="text/javascript">
+
+  $(function() {
+    // тут можна писать любой javascript
+    // после загрузки страницы
+
+    $('#datetimepicker').datetimepicker();
+});
+
+</script>
+
 <form action='/visit' method='POST'>
   <div class="form-group">
     <label for="exampleInputEmail1">Name</label>
@@ -13,7 +25,7 @@
 
   <div class="form-group">
     <label for="exampleInputEmail1">Whan to wait fo you</label>
-    <input name="date_time" type="text" class="form-control" placeholder="Date and time" value="<%= @date_time%>">
+    <input id="datetimepicker" name="date_time" type="text" class="form-control" placeholder="Date and time" value="<%= @date_time%>">
   </div>
 
   <div class="form-group">
