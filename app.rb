@@ -96,7 +96,10 @@ post '/contacts' do
 end
 
 get '/showusers' do
-
+  db = get_db
+  db.results_as_hash = true
+  @results = db.execute 'select * from Users order by id'
+  erb :showusers
 end
 
 # post '/contacts' do
