@@ -31,10 +31,12 @@
   <div class="form-group">
     <label for="exampleInputEmail1">Your barber</label>
     <select name="barber" class="form-control">
-      <option>Lessie Pinkman</option>
-      <option <%= @barber == 'Gus Friman'? 'selected' : '' %>>Gus Friman</option>
-      <option <%= @barber == 'Walter White'? 'selected' : '' %>>Walter White</option>
-      <option <%= @barber == 'Bob Pinkman'? 'selected' : '' %>>Bob Pinkman</option>
+      <!-- <option>Lessie Pinkman</option> -->
+
+      <% @barbers.each do |hh| %>
+      <option <%= @barber == hh['name']? 'selected' : '' %>><%= hh['name'] %></option>
+      <% end %>
+
     </select>
   </div>
 

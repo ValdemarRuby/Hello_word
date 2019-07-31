@@ -21,6 +21,12 @@ def get_db
  	return SQLite3::Database.new 'mydatabase.db'
 end
 
+before do
+  db = get_db
+  db.results_as_hash = true
+  @barbers = db.execute 'select * from Barbers order by id'
+end
+
 configure do
 	db = get_db
 	db.execute 'CREATE TABLE IF NOT EXISTS
@@ -54,7 +60,7 @@ get '/about' do
 end
 
 get '/visit' do
-	erb :visit
+  erb :visit
 end
 
 post '/visit' do
@@ -121,30 +127,3 @@ get '/showusers' do
   @results = db.execute 'select * from Users order by id'
   erb :showusers
 end
-
-# post '/contacts' do
-#
-# 	unless params[:name] == '' || params[:message] == ''
-# 		Pony.mail(
-#    		:name => params[:name],
-#   		:mail => params[:mail],
-#   		:body => params[:body],
-#   		:to => 'wings6928@gmail.com',
-#   		:subject => params[:name] + " has contacted you",
-#   		:body => params[:message],
-#   		:port => '587',
-#   		:via => :smtp,
-#   		:via_options => {
-#     		:address              => 'smtp.gmail.com',
-#     		:port                 => '587',
-#     		:enable_starttls_auto => true,
-#     		:user_name            => 'wings6928',
-#     		:password             => 'Sommelier0955009',
-#     		:authentication       => :plain,
-#     		:domain               => 'localhost.localdomain'
-#   		})
-# 			Pony.mail(:to => ENV["wings6928@gmail.com"])
-# 	 save_message(params[:name], params[:email], params[:content])
-# 	end
-# 	redirect '/success'
-# end
